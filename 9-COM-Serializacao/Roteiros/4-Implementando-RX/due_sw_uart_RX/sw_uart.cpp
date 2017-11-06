@@ -65,14 +65,15 @@ int sw_uart_receive_byte(due_sw_uart *uart, char* data) {
 
   // recebe dados
   for (int i = 0; i <= 7; i++){
-    nchar = nchar|(digitalRead(uart -> pin_rx) << i)
+    nchar = nchar|(digitalRead(uart -> pin_rx) << i);
     _sw_uart_wait_T(uart);  
   }
 
   // recebe paridade
-  rx_paririty = digitalRead(uart -> pin_rx);
+  rx_parity = digitalRead(uart -> pin_rx);
+  _sw_uart_wait_T(uart);  
   // recebe stop bit
-  int stopBit = digitalRead(uart -> pin_rx)
+  int stopBit = digitalRead(uart -> pin_rx);
 
   // checa paridade
   parity = calc_even_parity(nchar);
