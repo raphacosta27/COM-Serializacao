@@ -2,10 +2,10 @@
 #pragma GCC optimize ("-O3")
 
 void sw_uart_setup(due_sw_uart *uart, int rx, int tx, int stopbits, int databits, int paritybit) {
-	uart->pin_tx     = tx;
-	uart->pin_rx     = rx;
-	uart->stopbits   = stopbits;
-	uart->paritybit  = paritybit;
+  uart->pin_tx     = tx;
+  uart->pin_rx     = rx;
+  uart->stopbits   = stopbits;
+  uart->paritybit  = paritybit;
   uart->databits   = databits;
   pinMode(rx, INPUT);
   pinMode(tx, OUTPUT);
@@ -13,7 +13,7 @@ void sw_uart_setup(due_sw_uart *uart, int rx, int tx, int stopbits, int databits
 }
 
 void sw_uart_write_data(due_sw_uart *uart, char* bufferData, int writeN) {
-  for(int i = 0; i < writeN; i++) {
+  for (int i = 0; i < writeN; i++) {
     sw_uart_write_byte(uart, bufferData[i]);
   }
 }
@@ -23,7 +23,18 @@ void sw_uart_write_string(due_sw_uart *uart, char* stringData) {
 }
 
 int calc_even_parity(char data) {
-  
+  int soma = 0;
+  int a;
+  for (int i = 0; i <= 7; i++) {
+    a = (data >> i ) & 0x01;
+    soma += a;
+  }
+  if (soma % 2 == 0) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
 // recebimento de dados da serial
@@ -31,39 +42,57 @@ int sw_uart_receive_byte(due_sw_uart *uart, char* data) {
 
   // variavel para recebimento de dados
   char nchar  = 0;
-  
+
   // variavel para calculo da paridade
   char parity, rx_parity;
   
+  boolean isZero = false;
   // aguarda start bit
-
-  // Confirma start BIT
-  
-  // checa se bit ainda é 0
-  
-  // recebe dados
-
-  // recebe paridade
-
-  // recebe stop bit
-  
-  // checa paridade
-  if(parity != rx_parity) {
-    return SW_UART_ERROR_PARITY;
+  while(!isZero){
+    
+    // Confirma start BIT
+    if (digitalRead(uart -> pin_rx) == 0){
+      _sw_uart_wait_half_T(uart);
+      
+      // checa se bit ainda é 0
+      if(digitalRead(uart -> pin_rx) == 0){
+        isZero = true;
+      }
+    }
   }
   
+  _sw_uart_wait_T(uart);
+
+  // recebe dados
+  for (int i = 0; i <= 7; i++){
+    nchar = nchar|(digitalRead(uart -> pin_rx) << i)
+    _sw_uart_wait_T(uart);  
+  }
+
+  // recebe paridade
+  rx_paririty = digitalRead(uart -> pin_rx);
+  // recebe stop bit
+  int stopBit = digitalRead(uart -> pin_rx)
+
+  // checa paridade
+  parity = calc_even_parity(nchar);
+  
+  if (parity != rx_parity) {
+    return SW_UART_ERROR_PARITY;
+  }
+
   *data = nchar;
   return SW_UART_SUCCESS;
 }
 
 void sw_uart_write_byte(due_sw_uart *uart, char data) {
- 
+
 }
 
 // MCK 21MHz
 // 1093 para baudrate 9600/2
 void _sw_uart_wait_half_T(due_sw_uart *uart) {
-  for(int i = 0; i < 1093; i++)
+  for (int i = 0; i < 1093; i++)
     asm("NOP");
 }
 
