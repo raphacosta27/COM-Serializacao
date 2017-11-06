@@ -25,7 +25,17 @@ void sw_uart_write_string(due_sw_uart *uart, char* stringData) {
 // Funcao para calcular paridade impar
 // retorna paridade
 int calc_even_parity(char data) {
-  
+  int soma = 0;
+  for(int i = 0; i <= data.databits; i++){
+    int a = (data >> i ) & 0x01;
+    soma += a;
+  }
+  if (soma % 2 == 0){
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
 
 // Funcao para enviar um char (data 8 bits) via uart
