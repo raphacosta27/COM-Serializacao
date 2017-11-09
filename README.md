@@ -12,7 +12,7 @@ date: Novembro - 2017
 
 A mensagem a ser transmitida era: `Cam Fisica Rapha e Elisa`, assim a forma de onda gerada pelo envio dos três primeiros caracteres é representado na imagem abaixo.
 
-![analog](COM-Serializacao/9-COM-Serializacao/analog.jpeg)
+![analog](https://github.com/raphacosta27/COM-Serializacao/blob/master/9-COM-Serializacao/analog.jpeg)
 
 ## Explicar o código
 
